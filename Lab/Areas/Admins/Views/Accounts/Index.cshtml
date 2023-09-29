@@ -1,0 +1,111 @@
+﻿
+
+@model X.PagedList.IPagedList<Lab.Models.Account>
+@using X.PagedList.Mvc.Core
+
+@{
+    ViewData["Title"] = "Acounts Index";
+    Layout = "~/Areas/Admins/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+
+
+<form action="" method="get" class="form-inline">
+    <div class="form-group">
+<label class="sr-only" for="keyword">Tìm theo tên loại</label>
+<input class="form-control" name="name" id="keyword" placeholder="Nhập tên cần tìm" />
+</div>
+<button type="submit" class="btn btn-default mr-1">
+    <i class="fa fa- search"></i>
+</button>
+  
+
+<hr />
+
+
+    <p>
+        <a class="btn btn-outline-success btn-sm mb-0 me-3" asp-action="Create">
+            Thêm người dùng
+        </a>
+    </p>
+
+</form>
+
+
+
+<table class="table align-items-center mb-0">
+    <thead>
+        <tr>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Thông tin Người dùng | @Html.DisplayNameFor(model => model.FirstOrDefault().FullName)</th>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Username và Password | @Html.DisplayNameFor(model => model.FirstOrDefault().Phone)</th>
+            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">SĐT và Địa chỉ @Html.DisplayNameFor(model => model.FirstOrDefault().Address)</th>
+            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Loại người dùng @Html.DisplayNameFor(model => model.FirstOrDefault().AccountId)</th>
+            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status @Html.DisplayNameFor(model => model.FirstOrDefault().Active)</th>
+            <th class="text-secondary opacity-7"></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr> 
+                <td>
+                    <div class="d-flex px-2 py-1">
+                        <div>
+                            <img src="@item.Picture" class="avatar avatar-sm me-3 border-radius-lg" alt="user1">
+                        </div>
+                        <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">@Html.DisplayFor(modelItem => item.FullName)</h6>
+                            <p class="text-xs text-secondary mb-0">@item.Email</p>
+                        </div>
+                    </div>
+                </td>
+
+                <td>
+                    <p class="text-xs font-weight-bold mb-0">@item.Username</p>
+                    <p class="text-xs text-secondary mb-0">@item.Password</p>
+                </td>
+
+                <td>
+                    <p class="text-xs font-weight-bold mb-0">@item.Phone</p>
+                    <p class="text-xs text-secondary mb-0">@item.Address</p>
+                </td>
+                <td class="align-middle text-center text-sm">
+                    @if(@item.IsAdmin == true){
+                    <span class="badge badge-sm bg-gradient-success">Admin</span>
+                    }else{
+                    <span class="badge badge-sm bg-gradient-secondary">User</span>
+                    }
+                </td>
+                <td>
+                    @if (@item.Active == true)
+                    {
+                        <span class="badge badge-sm bg-gradient-success">Online</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-sm bg-gradient-secondary">Block</span>
+                    }
+                </td>
+
+                <td>
+
+                    <a asp-area="Admins" asp-controller="Accounts" asp-action="Edit" asp-route-id="@item.AccountId" class="btn btn-warning text-gray font-weight-bold text-xs">Edit</a> 
+                    <a asp-area="Admins" asp-controller="Accounts" asp-action="Details" class="btn btn-info text-gray font-weight-bold text-xs"  asp-route-id="@item.AccountId">Details</a> 
+                    <a asp-area="Admins" asp-controller="Accounts" asp-action="Delete" class="btn btn-danger text-gray font-weight-bold text-xs"  asp-route-id="@item.AccountId">Delete</a>
+                </td>
+            </tr>
+      
+        
+        }
+
+</tbody>
+</table>
+
+<hr/>
+@Html.PagedListPager(Model, page=>Url.Action("Index", new {page=page}), new
+PagedListRenderOptions{
+LiElementClasses = new string[] { "page-item" },
+PageClasses = new string[] { "page-link" }
+})
